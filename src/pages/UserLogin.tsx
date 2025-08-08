@@ -44,63 +44,51 @@ const UserLogin = () => {
         return;
       }
 
-      // Create email from phone number for Supabase auth
-      const email = `${cleanPhone}@agodamall.com`;
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // First authenticate with our custom function
+      const { data: authResult, error: authError } = await supabase.rpc('authenticate_user', {
+        phone_number: cleanPhone,
+        password: password
       });
 
-      if (error) {
-        console.error('Login error:', error);
+      if (authError) throw authError;
+
+      if (!authResult?.success) {
         toast({
           title: t.loginFailed,
-          description: "Invalid phone number or password",
+          description: authResult?.message || "Invalid phone number or password",
           variant: "destructive",
         });
         return;
       }
 
-      if (data.user) {
-        // Update login records
-        try {
-          await supabase.from('login_records').insert({
-            username: cleanPhone,
-            login_ip: null, // Could be populated with actual IP if needed
-            login_address: null,
-            login_date: new Date().toISOString()
-          });
-        } catch (recordError) {
-          console.warn('Failed to create login record:', recordError);
-        }
+      // Now sign in with Supabase Auth using the email
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: authResult.email,
+        password: password,
+      });
 
-        // Update profile last login time
-        try {
-          await supabase
-            .from('profiles')
-            .update({ 
-              last_login_time: new Date().toISOString(),
-              login_status: 'online'
-            })
-            .eq('user_id', data.user.id);
-        } catch (profileError) {
-          console.warn('Failed to update profile:', profileError);
-        }
-
-        // Set user session
-        localStorage.setItem('userAuthenticated', 'true');
-        localStorage.setItem('userPhone', cleanPhone);
-        localStorage.setItem('userRole', 'user');
-        localStorage.setItem('userId', data.user.id);
-        
+      if (signInError) {
+        console.error('Supabase sign in error:', signInError);
         toast({
-          title: t.loginSuccess,
-          description: t.welcome,
+          title: t.loginFailed,
+          description: "Authentication failed",
+          variant: "destructive",
         });
-        
-        navigate('/user/dashboard');
+        return;
       }
+
+      // Set user session
+      localStorage.setItem('userAuthenticated', 'true');
+      localStorage.setItem('userPhone', cleanPhone);
+      localStorage.setItem('userRole', 'user');
+      localStorage.setItem('userId', authResult.user_id);
+      
+      toast({
+        title: t.loginSuccess,
+        description: t.welcome,
+      });
+      
+      navigate('/user/dashboard');
       
     } catch (error) {
       console.error('Login error:', error);

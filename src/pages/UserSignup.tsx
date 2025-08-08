@@ -58,12 +58,14 @@ const UserSignup = () => {
         return;
       }
 
-      // Create email from phone number for Supabase auth
-      const email = `${cleanPhone}@agodamall.com`;
-      
-      // Check if user already exists
-      const { data: existingUser } = await supabase.auth.getUser();
-      if (existingUser.user) {
+      // Check if user already exists in our users table
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('phone_number', cleanPhone)
+        .single();
+
+      if (existingUser && !checkError) {
         toast({
           title: t.registerFailed,
           description: t.accountExists,
@@ -72,35 +74,33 @@ const UserSignup = () => {
         return;
       }
 
-      // Register user with Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password: formData.password,
-        options: {
-          data: {
-            username: cleanPhone,
-            phone_number: cleanPhone,
-            invitation_code: formData.inviteCode || null,
-          }
-        }
+      // Send OTP for registration
+      const { data: otpResult, error: otpError } = await supabase.rpc('send_otp', {
+        phone_number: cleanPhone,
+        purpose: 'registration'
       });
 
-      if (error) {
-        console.error('Registration error:', error);
+      if (otpError) throw otpError;
+
+      if (!otpResult?.success) {
         toast({
-          title: t.registerFailed,
-          description: error.message || "Registration failed",
+          title: "Failed to Send OTP",
+          description: otpResult?.message || "Please try again",
           variant: "destructive",
         });
         return;
       }
 
-      toast({
-        title: t.registerSuccess,
-        description: "Account created successfully! You can now login.",
+      // Navigate to OTP verification
+      navigate('/user/otp-verification', {
+        state: {
+          phoneNumber: cleanPhone,
+          password: formData.password,
+          inviteCode: formData.inviteCode,
+          purpose: 'registration'
+        }
       });
 
-      navigate("/user/login");
     } catch (error: any) {
       console.error("Signup error:", error);
       toast({

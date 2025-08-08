@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import UserLogin from "./pages/UserLogin";
 import UserSignup from "./pages/UserSignup";
+import OTPVerification from "./pages/OTPVerification";
 import UserDashboard from "./pages/UserDashboard";
 import LandingPage from "./pages/LandingPage";
 import UserOrder from "./pages/UserOrder";
@@ -72,6 +73,7 @@ const App = () => (
           {/* User Routes */}
           <Route path="/user/login" element={<UserLogin />} />
           <Route path="/user/signup" element={<UserSignup />} />
+          <Route path="/user/otp-verification" element={<OTPVerification />} />
           <Route path="/user/dashboard" element={
             <UserProtectedRoute>
               <UserDashboard />
