@@ -33,8 +33,19 @@ const UserLogin = () => {
         return;
       }
 
+      // Clean phone number
+      const cleanPhone = phoneNumber.replace(/\D/g, '');
+      if (cleanPhone.length < 10) {
+        toast({
+          title: t.loginFailed,
+          description: "Please enter a valid phone number",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Create email from phone number for Supabase auth
-      const email = `${phoneNumber}@agodamall.com`;
+      const email = `${cleanPhone}@agodamall.com`;
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -52,9 +63,34 @@ const UserLogin = () => {
       }
 
       if (data.user) {
+        // Update login records
+        try {
+          await supabase.from('login_records').insert({
+            username: cleanPhone,
+            login_ip: null, // Could be populated with actual IP if needed
+            login_address: null,
+            login_date: new Date().toISOString()
+          });
+        } catch (recordError) {
+          console.warn('Failed to create login record:', recordError);
+        }
+
+        // Update profile last login time
+        try {
+          await supabase
+            .from('profiles')
+            .update({ 
+              last_login_time: new Date().toISOString(),
+              login_status: 'online'
+            })
+            .eq('user_id', data.user.id);
+        } catch (profileError) {
+          console.warn('Failed to update profile:', profileError);
+        }
+
         // Set user session
         localStorage.setItem('userAuthenticated', 'true');
-        localStorage.setItem('userPhone', phoneNumber);
+        localStorage.setItem('userPhone', cleanPhone);
         localStorage.setItem('userRole', 'user');
         localStorage.setItem('userId', data.user.id);
         

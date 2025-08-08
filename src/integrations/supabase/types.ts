@@ -7,11 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
-  }
   public: {
     Tables: {
       administrators: {
@@ -232,85 +227,67 @@ export type Database = {
       coupon_records: {
         Row: {
           coupon_code: string | null
-          coupon_id: string
-          created_at: string | null
-          distribution_time: string | null
+          created_at: string
+          distribution_time: string
           id: string
           special_offers: string | null
-          update_time: string | null
+          update_time: string
           used_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           coupon_code?: string | null
-          coupon_id: string
-          created_at?: string | null
-          distribution_time?: string | null
+          created_at?: string
+          distribution_time?: string
           id?: string
           special_offers?: string | null
-          update_time?: string | null
+          update_time?: string
           used_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           coupon_code?: string | null
-          coupon_id?: string
-          created_at?: string | null
-          distribution_time?: string | null
+          created_at?: string
+          distribution_time?: string
           id?: string
           special_offers?: string | null
-          update_time?: string | null
+          update_time?: string
           used_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "coupon_records_coupon_id_fkey"
-            columns: ["coupon_id"]
-            isOneToOne: false
-            referencedRelation: "coupons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "coupon_records_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       coupons: {
         Row: {
-          coupon_type: string | null
-          created_at: string | null
+          coupon_type: string
+          created_at: string
           id: string
           issue_quantity: number | null
           name: string
-          open_state: boolean | null
-          sorting: number | null
+          open_state: boolean
+          sorting: number
           special_offers: string | null
           valid_days: number | null
         }
         Insert: {
-          coupon_type?: string | null
-          created_at?: string | null
+          coupon_type: string
+          created_at?: string
           id?: string
           issue_quantity?: number | null
           name: string
-          open_state?: boolean | null
-          sorting?: number | null
+          open_state?: boolean
+          sorting?: number
           special_offers?: string | null
           valid_days?: number | null
         }
         Update: {
-          coupon_type?: string | null
-          created_at?: string | null
+          coupon_type?: string
+          created_at?: string
           id?: string
           issue_quantity?: number | null
           name?: string
-          open_state?: boolean | null
-          sorting?: number | null
+          open_state?: boolean
+          sorting?: number
           special_offers?: string | null
           valid_days?: number | null
         }
@@ -549,35 +526,32 @@ export type Database = {
       }
       lucky_wheel_activities: {
         Row: {
-          created_at: string | null
-          daily_draw_limit: number | null
-          details: string | null
-          event_pictures: Json | null
-          free_draw_daily: boolean | null
+          created_at: string
+          daily_draw_limit: number
+          details: string
+          free_draw_daily: boolean
           id: string
-          is_active: boolean | null
+          is_active: boolean
           name: string
           total_draw_limit: number | null
         }
         Insert: {
-          created_at?: string | null
-          daily_draw_limit?: number | null
-          details?: string | null
-          event_pictures?: Json | null
-          free_draw_daily?: boolean | null
+          created_at?: string
+          daily_draw_limit?: number
+          details: string
+          free_draw_daily?: boolean
           id?: string
-          is_active?: boolean | null
+          is_active?: boolean
           name: string
           total_draw_limit?: number | null
         }
         Update: {
-          created_at?: string | null
-          daily_draw_limit?: number | null
-          details?: string | null
-          event_pictures?: Json | null
-          free_draw_daily?: boolean | null
+          created_at?: string
+          daily_draw_limit?: number
+          details?: string
+          free_draw_daily?: boolean
           id?: string
-          is_active?: boolean | null
+          is_active?: boolean
           name?: string
           total_draw_limit?: number | null
         }
@@ -634,7 +608,7 @@ export type Database = {
           card_mode: string | null
           commission: number | null
           commission_rate: number | null
-          created_at: string | null
+          created_at: string
           current_balance: number | null
           freeze_amount: number | null
           grab_info: Json | null
@@ -650,7 +624,7 @@ export type Database = {
           card_mode?: string | null
           commission?: number | null
           commission_rate?: number | null
-          created_at?: string | null
+          created_at?: string
           current_balance?: number | null
           freeze_amount?: number | null
           grab_info?: Json | null
@@ -666,7 +640,7 @@ export type Database = {
           card_mode?: string | null
           commission?: number | null
           commission_rate?: number | null
-          created_at?: string | null
+          created_at?: string
           current_balance?: number | null
           freeze_amount?: number | null
           grab_info?: Json | null
@@ -678,20 +652,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "orders_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "orders_solution_group_id_fkey"
-            columns: ["solution_group_id"]
-            isOneToOne: false
-            referencedRelation: "solution_groups"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "orders_user_id_fkey"
             columns: ["user_id"]
@@ -901,37 +861,37 @@ export type Database = {
       }
       products: {
         Row: {
-          code: string | null
-          created_at: string | null
+          code: string
+          created_at: string
           id: string
           image_url: string | null
           is_open: boolean | null
           name: string
           price: number
           sorting: number | null
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          code?: string | null
-          created_at?: string | null
+          code: string
+          created_at?: string
           id?: string
           image_url?: string | null
           is_open?: boolean | null
           name: string
           price: number
           sorting?: number | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          code?: string | null
-          created_at?: string | null
+          code?: string
+          created_at?: string
           id?: string
           image_url?: string | null
           is_open?: boolean | null
           name?: string
           price?: number
           sorting?: number | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -940,7 +900,7 @@ export type Database = {
           balance: number | null
           created_at: string | null
           email: string | null
-          grade: number | null
+          grade: string | null
           id: string
           invitation_code: string | null
           is_member_agent: boolean | null
@@ -948,7 +908,7 @@ export type Database = {
           login_address: string | null
           login_ip: string | null
           login_status: string | null
-          phone_number: string
+          phone_number: string | null
           platform_agent: string | null
           remark: string | null
           telegram: string | null
@@ -962,7 +922,7 @@ export type Database = {
           balance?: number | null
           created_at?: string | null
           email?: string | null
-          grade?: number | null
+          grade?: string | null
           id: string
           invitation_code?: string | null
           is_member_agent?: boolean | null
@@ -970,7 +930,7 @@ export type Database = {
           login_address?: string | null
           login_ip?: string | null
           login_status?: string | null
-          phone_number: string
+          phone_number?: string | null
           platform_agent?: string | null
           remark?: string | null
           telegram?: string | null
@@ -984,7 +944,7 @@ export type Database = {
           balance?: number | null
           created_at?: string | null
           email?: string | null
-          grade?: number | null
+          grade?: string | null
           id?: string
           invitation_code?: string | null
           is_member_agent?: boolean | null
@@ -992,7 +952,7 @@ export type Database = {
           login_address?: string | null
           login_ip?: string | null
           login_status?: string | null
-          phone_number?: string
+          phone_number?: string | null
           platform_agent?: string | null
           remark?: string | null
           telegram?: string | null
@@ -1070,45 +1030,45 @@ export type Database = {
       solution_groups: {
         Row: {
           agent_name: string | null
-          associated_users: number | null
-          created_at: string | null
+          associated_users: number
+          created_at: string
           id: string
-          is_default: boolean | null
-          is_team_mode: boolean | null
+          is_default: boolean
+          is_team_mode: boolean
           name: string
-          number_of_orders: number | null
-          open_state: boolean | null
+          number_of_orders: number
+          open_state: boolean
           program_plan: string | null
           serial_number: number | null
-          share: number | null
+          share: number
         }
         Insert: {
           agent_name?: string | null
-          associated_users?: number | null
-          created_at?: string | null
+          associated_users?: number
+          created_at?: string
           id?: string
-          is_default?: boolean | null
-          is_team_mode?: boolean | null
+          is_default?: boolean
+          is_team_mode?: boolean
           name: string
-          number_of_orders?: number | null
-          open_state?: boolean | null
+          number_of_orders?: number
+          open_state?: boolean
           program_plan?: string | null
           serial_number?: number | null
-          share?: number | null
+          share?: number
         }
         Update: {
           agent_name?: string | null
-          associated_users?: number | null
-          created_at?: string | null
+          associated_users?: number
+          created_at?: string
           id?: string
-          is_default?: boolean | null
-          is_team_mode?: boolean | null
+          is_default?: boolean
+          is_team_mode?: boolean
           name?: string
-          number_of_orders?: number | null
-          open_state?: boolean | null
+          number_of_orders?: number
+          open_state?: boolean
           program_plan?: string | null
           serial_number?: number | null
-          share?: number | null
+          share?: number
         }
         Relationships: []
       }
@@ -1225,31 +1185,37 @@ export type Database = {
       }
       tasks: {
         Row: {
-          created_at: string | null
+          created_at: string
+          description: string | null
           id: string
-          number_of_orders: number | null
+          number_of_orders: number
           open_state: boolean | null
-          reward_amount: number | null
+          reward_amount: number
           sorting: number | null
           title: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          number_of_orders?: number | null
+          number_of_orders: number
           open_state?: boolean | null
-          reward_amount?: number | null
+          reward_amount: number
           sorting?: number | null
           title: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
+          description?: string | null
           id?: string
-          number_of_orders?: number | null
+          number_of_orders?: number
           open_state?: boolean | null
-          reward_amount?: number | null
+          reward_amount?: number
           sorting?: number | null
           title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1355,67 +1321,49 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
       users: {
         Row: {
           agent_id: string | null
           balance: number | null
-          created_at: string | null
+          created_at: string
           email: string
           first_deposit_total: number | null
           id: string
           is_online: boolean | null
           password_hash: string
+          phone_number: string | null
           second_charge_total: number | null
-          updated_at: string | null
+          updated_at: string
           user_type: string | null
           username: string
         }
         Insert: {
           agent_id?: string | null
           balance?: number | null
-          created_at?: string | null
+          created_at?: string
           email: string
           first_deposit_total?: number | null
           id?: string
           is_online?: boolean | null
           password_hash: string
+          phone_number?: string | null
           second_charge_total?: number | null
-          updated_at?: string | null
+          updated_at?: string
           user_type?: string | null
           username: string
         }
         Update: {
           agent_id?: string | null
           balance?: number | null
-          created_at?: string | null
+          created_at?: string
           email?: string
           first_deposit_total?: number | null
           id?: string
           is_online?: boolean | null
           password_hash?: string
+          phone_number?: string | null
           second_charge_total?: number | null
-          updated_at?: string | null
+          updated_at?: string
           user_type?: string | null
           username?: string
         }
@@ -1433,51 +1381,46 @@ export type Database = {
         Row: {
           activity_id: string | null
           activity_name: string | null
-          draw_time: string | null
+          created_at: string | null
+          draw_time: string
           id: string
           order_number: string
           payment_amount: number | null
           prize_name: string | null
-          user_id: string
-          username: string | null
+          user_id: string | null
+          username: string
           winning_amount: number | null
           winning_info: string | null
         }
         Insert: {
           activity_id?: string | null
           activity_name?: string | null
-          draw_time?: string | null
+          created_at?: string | null
+          draw_time?: string
           id?: string
           order_number: string
           payment_amount?: number | null
           prize_name?: string | null
-          user_id: string
-          username?: string | null
+          user_id?: string | null
+          username: string
           winning_amount?: number | null
           winning_info?: string | null
         }
         Update: {
           activity_id?: string | null
           activity_name?: string | null
-          draw_time?: string | null
+          created_at?: string | null
+          draw_time?: string
           id?: string
           order_number?: string
           payment_amount?: number | null
           prize_name?: string | null
-          user_id?: string
-          username?: string | null
+          user_id?: string | null
+          username?: string
           winning_amount?: number | null
           winning_info?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "wheel_draw_records_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       withdrawal_records: {
         Row: {
@@ -1538,152 +1481,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
-      has_role: {
-        Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user" | "vip" | "agent"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
     }
   }
 }
-
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
-
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
-
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  public: {
-    Enums: {
-      app_role: ["admin", "user", "vip", "agent"],
-    },
-  },
-} as const

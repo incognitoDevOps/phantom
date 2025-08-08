@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, Copy, Menu } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface DepositChannel {
@@ -23,11 +22,20 @@ interface DepositChannel {
 const UserDeposit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
   const { t } = useTranslation();
   const [selectedChannel, setSelectedChannel] = useState<DepositChannel>();
   const [rechargeAmount, setRechargeAmount] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Get current user
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getCurrentUser();
+  }, []);
 
   const depositChannels: DepositChannel[] = [
     {
@@ -158,12 +166,20 @@ const UserDeposit = () => {
       const randomSuffix = Math.random().toString(36).substr(2, 6).toUpperCase();
       const orderNumber = `DEP${timestamp}${randomSuffix}`;
 
+      // Get user phone number from profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('phone_number, username')
+        .eq('user_id', user.id)
+        .single();
+
+      const username = profile?.phone_number || profile?.username || user.email;
       // Create recharge record
       const { error } = await supabase
         .from('recharge_records')
         .insert({
           user_id: user.id,
-          username: user.email,
+          username: username,
           merchant_order_number: orderNumber,
           payment_methods: selectedChannel.name,
           recharge_amount: amount,

@@ -58,55 +58,46 @@ const UserSignup = () => {
         return;
       }
 
-      // Step 1: Create user in public.users table
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .insert({
-          username: cleanPhone,
-          phone_number: cleanPhone,
-          password_hash: formData.password,
-          balance: 0,
-          user_type: "user",
-          agent_id: null,
-        })
-        .select()
-        .single();
-
-      if (userError) throw userError;
-
-      // Step 2: Create profile with all required fields
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: userData.id, // Make sure this matches your users table
-          phone_number: cleanPhone,
-          username: cleanPhone,
-          balance: 0,
-          withdrawal_status: "active",
-          // Set default values for all non-nullable fields
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          // Optional fields can be null
-          email: null,
-          grade: null,
-          invitation_code: formData.inviteCode || null,
-          is_member_agent: null,
-          last_login_time: null,
-          login_address: null,
-          login_ip: null,
-          login_status: null,
-          platform_agent: null,
-          remark: null,
-          telegram: null,
-          whatsapp: null,
-          withdrawal_password: null,
+      // Create email from phone number for Supabase auth
+      const email = `${cleanPhone}@agodamall.com`;
+      
+      // Check if user already exists
+      const { data: existingUser } = await supabase.auth.getUser();
+      if (existingUser.user) {
+        toast({
+          title: t.registerFailed,
+          description: t.accountExists,
+          variant: "destructive",
         });
+        return;
+      }
 
-      if (profileError) throw profileError;
+      // Register user with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: formData.password,
+        options: {
+          data: {
+            username: cleanPhone,
+            phone_number: cleanPhone,
+            invitation_code: formData.inviteCode || null,
+          }
+        }
+      });
+
+      if (error) {
+        console.error('Registration error:', error);
+        toast({
+          title: t.registerFailed,
+          description: error.message || "Registration failed",
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({
         title: t.registerSuccess,
-        description: "Account created successfully, please login",
+        description: "Account created successfully! You can now login.",
       });
 
       navigate("/user/login");
