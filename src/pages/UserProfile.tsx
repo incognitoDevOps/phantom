@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslation';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Home, 
   ShoppingCart, 
@@ -34,10 +35,23 @@ const UserProfile = () => {
     { value: 'zh', label: '中文', flag: '/lovable-uploads/ee60408c-b028-4043-ae1e-136b8daf4ef6.png' }
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Logout error:', error);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    
+    // Clear local storage
     localStorage.removeItem('userAuthenticated');
     localStorage.removeItem('userPhone');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    
     toast({
       title: "已退出登录",
       description: "您已成功退出系统",
